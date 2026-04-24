@@ -104,7 +104,7 @@ const EventDetail = () => {
       </nav>
 
       <div className="max-w-4xl mx-auto px-4 py-8 md:px-8">
-        <div className="aspect-[21/9] rounded-2xl overflow-hidden bg-muted mb-8">
+        <div className="aspect-video rounded-2xl overflow-hidden bg-muted mb-8">
           {event.image ? (
             <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
           ) : (

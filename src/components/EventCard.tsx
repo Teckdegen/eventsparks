@@ -43,7 +43,7 @@ export const EventCard = ({ event }: { event: EventData }) => {
   return (
     <Link to={`/event/${event.id}`}>
       <Card className="group overflow-hidden border-border/50 hover:shadow-xl transition-all duration-500 hover:-translate-y-1 cursor-pointer">
-        <div className="h-48 overflow-hidden bg-muted">
+        <div className="aspect-video overflow-hidden bg-muted">
           {event.image ? (
             <img src={event.image} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
           ) : (

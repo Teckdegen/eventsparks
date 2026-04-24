@@ -10,7 +10,7 @@ import { CreateEventDialog, type EventFormData } from "@/components/CreateEventD
 import { EventCard } from "@/components/EventCard";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { LogOut, Trash2, Pencil, Users } from "lucide-react";
+import { LogOut, Trash2, Pencil, Users, Mail } from "lucide-react";
 import { AdminAnalytics } from "@/components/AdminAnalytics";
 import logo from "@/assets/eventsparks-logo.png";
 import {
@@ -24,6 +24,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const fetchEvents = async () => {
   const { data, error } = await supabase
@@ -42,6 +50,15 @@ const fetchSubscriberCount = async () => {
   return count ?? 0;
 };
 
+const fetchSubscribers = async () => {
+  const { data, error } = await supabase
+    .from("newsletter_subscribers")
+    .select("email, subscribed_at")
+    .order("subscribed_at", { ascending: false });
+  if (error) throw error;
+  return data as { email: string; subscribed_at: string }[];
+};
+
 const Admin = () => {
   const { isAdmin, loading, signIn, signOut } = useAuth();
   const queryClient = useQueryClient();
@@ -51,6 +68,7 @@ const Admin = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [editingEvent, setEditingEvent] = useState<(EventFormData & { id: string }) | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [subscribersOpen, setSubscribersOpen] = useState(false);
 
   const { data: events = [] } = useQuery({
     queryKey: ["events"],
@@ -61,6 +79,12 @@ const Admin = () => {
   const { data: subscriberCount = 0 } = useQuery({
     queryKey: ["subscriber-count"],
     queryFn: fetchSubscriberCount,
+    enabled: isAdmin,
+  });
+
+  const { data: subscribers = [] } = useQuery({
+    queryKey: ["subscribers"],
+    queryFn: fetchSubscribers,
     enabled: isAdmin,
   });
 
@@ -213,13 +237,52 @@ const Admin = () => {
             </h1>
             <p className="text-muted-foreground">{events.length} event{events.length !== 1 ? "s" : ""} published</p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted px-4 py-2 rounded-full">
+          <button
+            onClick={() => setSubscribersOpen(true)}
+            className="flex items-center gap-2 text-sm text-muted-foreground bg-muted px-4 py-2 rounded-full hover:bg-muted/80 transition-colors cursor-pointer"
+          >
             <Users className="w-4 h-4" />
             <span>{subscriberCount} subscriber{subscriberCount !== 1 ? "s" : ""}</span>
-          </div>
+          </button>
         </div>
 
         <AdminAnalytics events={events} subscriberCount={subscriberCount} />
+
+        {/* Subscribers Dialog */}
+        <Dialog open={subscribersOpen} onOpenChange={setSubscribersOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Mail className="w-5 h-5 text-primary" />
+                Newsletter Subscribers
+              </DialogTitle>
+              <DialogDescription>
+                {subscribers.length} total subscriber{subscribers.length !== 1 ? "s" : ""}
+              </DialogDescription>
+            </DialogHeader>
+            <ScrollArea className="max-h-[60vh] pr-4">
+              <div className="space-y-2">
+                {subscribers.length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-8">No subscribers yet.</p>
+                )}
+                {subscribers.map((sub, idx) => (
+                  <div
+                    key={sub.email}
+                    className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
+                  >
+                    <div>
+                      <p className="text-sm font-medium">{sub.email}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(sub.subscribed_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <span className="text-xs text-muted-foreground">#{idx + 1}</span>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
 
         {/* Edit dialog */}
         {editingEvent && (
@@ -271,10 +334,6 @@ const Admin = () => {
                       size="sm"
                       variant="destructive"
                       className="h-8 w-8 p-0 rounded-full shadow-md"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>
