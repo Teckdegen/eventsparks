@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { Search, MapPin } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import heroImage from "@/assets/hero-event.jpg";
 import { CreateEventDialog, type EventFormData } from "./CreateEventDialog";
+import { AFRICAN_COUNTRIES } from "@/lib/locations";
 
 const heroCategories = ["Blockchain", "Tech", "AI", "Hackathon", "Meetup", "Workshop", "Webinar", "Bootcamp"];
 
@@ -14,12 +15,12 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ onCreateEvent, isAdmin, onSearch }: HeroSectionProps) => {
+  const [country, setCountry] = useState("");
+  const [category, setCategory] = useState("");
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const location = (formData.get("location") as string) || "";
-    const category = (formData.get("category") as string) || "";
-    onSearch?.(location, category);
+    onSearch?.(country, category);
   };
 
   return (
@@ -36,16 +37,21 @@ export const HeroSection = ({ onCreateEvent, isAdmin, onSearch }: HeroSectionPro
           Find blockchain conferences, hackathons, meetups & workshops across Africa.
         </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-lg">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl">
           <div className="relative flex-1">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              name="location"
-              placeholder="City or country..."
-              className="pl-9 rounded-full bg-background/90 backdrop-blur-sm border-none"
-            />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
+            <Select value={country} onValueChange={setCountry}>
+              <SelectTrigger className="pl-9 rounded-full bg-background/90 backdrop-blur-sm border-none">
+                <SelectValue placeholder="Country" />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                {AFRICAN_COUNTRIES.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Select name="category">
+          <Select value={category} onValueChange={setCategory}>
             <SelectTrigger className="w-full sm:w-40 rounded-full bg-background/90 backdrop-blur-sm border-none">
               <SelectValue placeholder="Category" />
             </SelectTrigger>

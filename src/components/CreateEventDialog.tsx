@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, X, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { AFRICAN_COUNTRIES, getCitiesForCountry } from "@/lib/locations";
 
 const categoryGroups = [
   {
@@ -146,11 +147,36 @@ export const CreateEventDialog = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="country">Country</Label>
-              <Input id="country" placeholder="e.g. United States" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} required />
+              <Select
+                value={form.country}
+                onValueChange={(val) => setForm({ ...form, country: val, city: "" })}
+              >
+                <SelectTrigger id="country">
+                  <SelectValue placeholder="Select country" />
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {AFRICAN_COUNTRIES.map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>
-              <Input id="city" placeholder="e.g. San Francisco" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required />
+              <Select
+                value={form.city}
+                onValueChange={(val) => setForm({ ...form, city: val })}
+                disabled={!form.country}
+              >
+                <SelectTrigger id="city">
+                  <SelectValue placeholder={form.country ? "Select city" : "Pick country first"} />
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {getCitiesForCountry(form.country).map((city) => (
+                    <SelectItem key={city} value={city}>{city}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="space-y-2">

@@ -1,0 +1,46 @@
+// African countries and their major cities for event location selection
+export const AFRICAN_LOCATIONS: Record<string, string[]> = {
+  Algeria: ["Algiers", "Oran", "Constantine"],
+  Angola: ["Luanda", "Lubango", "Benguela"],
+  Benin: ["Cotonou", "Porto-Novo"],
+  Botswana: ["Gaborone", "Francistown"],
+  "Burkina Faso": ["Ouagadougou", "Bobo-Dioulasso"],
+  Cameroon: ["Douala", "Yaoundé", "Buea"],
+  "Cape Verde": ["Praia", "Mindelo"],
+  "Côte d'Ivoire": ["Abidjan", "Yamoussoukro", "Bouaké"],
+  Egypt: ["Cairo", "Alexandria", "Giza"],
+  Ethiopia: ["Addis Ababa", "Dire Dawa"],
+  Gabon: ["Libreville", "Port-Gentil"],
+  Gambia: ["Banjul", "Serrekunda"],
+  Ghana: ["Accra", "Kumasi", "Takoradi", "Tamale"],
+  Kenya: ["Nairobi", "Mombasa", "Kisumu", "Nakuru"],
+  Lesotho: ["Maseru"],
+  Liberia: ["Monrovia"],
+  Libya: ["Tripoli", "Benghazi"],
+  Madagascar: ["Antananarivo"],
+  Malawi: ["Lilongwe", "Blantyre"],
+  Mali: ["Bamako"],
+  Mauritius: ["Port Louis", "Ebene"],
+  Morocco: ["Casablanca", "Rabat", "Marrakech", "Tangier"],
+  Mozambique: ["Maputo", "Beira"],
+  Namibia: ["Windhoek", "Walvis Bay"],
+  Niger: ["Niamey"],
+  Nigeria: ["Lagos", "Abuja", "Port Harcourt", "Ibadan", "Kano", "Benin City"],
+  Rwanda: ["Kigali"],
+  Senegal: ["Dakar", "Saint-Louis"],
+  "Sierra Leone": ["Freetown"],
+  Somalia: ["Mogadishu"],
+  "South Africa": ["Johannesburg", "Cape Town", "Durban", "Pretoria"],
+  Sudan: ["Khartoum"],
+  Tanzania: ["Dar es Salaam", "Dodoma", "Arusha", "Zanzibar City"],
+  Togo: ["Lomé"],
+  Tunisia: ["Tunis", "Sfax"],
+  Uganda: ["Kampala", "Entebbe", "Jinja"],
+  Zambia: ["Lusaka", "Kitwe"],
+  Zimbabwe: ["Harare", "Bulawayo"],
+};
+
+export const AFRICAN_COUNTRIES = Object.keys(AFRICAN_LOCATIONS).sort();
+
+export const getCitiesForCountry = (country: string): string[] =>
+  AFRICAN_LOCATIONS[country] ?? [];
