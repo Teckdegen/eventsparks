@@ -192,22 +192,16 @@ const Index = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="w-full sm:w-40">
-            <Select
-              value={cityFilter || "__all"}
-              onValueChange={(val) => setCityFilter(val === "__all" ? "" : val)}
-              disabled={!countryFilter}
-            >
-              <SelectTrigger className="rounded-full">
-                <SelectValue placeholder={countryFilter ? "City" : "Pick country"} />
-              </SelectTrigger>
-              <SelectContent className="max-h-72">
-                <SelectItem value="__all">All cities</SelectItem>
-                {getCitiesForCountry(countryFilter).map((city) => (
-                  <SelectItem key={city} value={city}>{city}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="w-full sm:w-56">
+            <CitySearch
+              value={cityFilter}
+              country={countryFilter}
+              onChange={(city, c) => {
+                setCityFilter(city);
+                if (city && c && c !== countryFilter) setCountryFilter(c);
+              }}
+              placeholder="Search city..."
+            />
           </div>
           <div className="relative w-full sm:w-44">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
