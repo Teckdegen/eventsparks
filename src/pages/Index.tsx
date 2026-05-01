@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { AFRICAN_COUNTRIES, getCitiesForCountry } from "@/lib/locations";
+import { CitySearch } from "@/components/CitySearch";
+import { Badge } from "@/components/ui/badge";
 
 // Grouped category structure
 const categoryGroups = [
@@ -192,22 +194,16 @@ const Index = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="w-full sm:w-40">
-            <Select
-              value={cityFilter || "__all"}
-              onValueChange={(val) => setCityFilter(val === "__all" ? "" : val)}
-              disabled={!countryFilter}
-            >
-              <SelectTrigger className="rounded-full">
-                <SelectValue placeholder={countryFilter ? "City" : "Pick country"} />
-              </SelectTrigger>
-              <SelectContent className="max-h-72">
-                <SelectItem value="__all">All cities</SelectItem>
-                {getCitiesForCountry(countryFilter).map((city) => (
-                  <SelectItem key={city} value={city}>{city}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="w-full sm:w-56">
+            <CitySearch
+              value={cityFilter}
+              country={countryFilter}
+              onChange={(city, c) => {
+                setCityFilter(city);
+                if (city && c && c !== countryFilter) setCountryFilter(c);
+              }}
+              placeholder="Search city..."
+            />
           </div>
           <div className="relative w-full sm:w-44">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -219,6 +215,44 @@ const Index = () => {
             />
           </div>
         </div>
+
+        {/* Active location filter chips */}
+        {(countryFilter || cityFilter) && (
+          <div className="flex flex-wrap items-center gap-2 mb-6 text-sm">
+            <span className="text-muted-foreground">Filtering by:</span>
+            {countryFilter && (
+              <Badge variant="secondary" className="gap-1.5 pr-1.5">
+                <MapPin className="w-3 h-3" />
+                {countryFilter}
+                <button
+                  onClick={() => { setCountryFilter(""); setCityFilter(""); }}
+                  className="ml-1 rounded-full hover:bg-background/60 px-1"
+                  aria-label="Clear country"
+                >
+                  ×
+                </button>
+              </Badge>
+            )}
+            {cityFilter && (
+              <Badge variant="secondary" className="gap-1.5 pr-1.5">
+                {cityFilter}
+                <button
+                  onClick={() => setCityFilter("")}
+                  className="ml-1 rounded-full hover:bg-background/60 px-1"
+                  aria-label="Clear city"
+                >
+                  ×
+                </button>
+              </Badge>
+            )}
+            <button
+              onClick={() => { setCountryFilter(""); setCityFilter(""); }}
+              className="text-xs text-primary hover:underline ml-1"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
 
         {/* Category filter tabs */}
         <div className="flex flex-wrap gap-2 mb-8">
