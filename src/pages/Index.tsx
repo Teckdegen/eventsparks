@@ -68,7 +68,8 @@ const Index = () => {
   const queryClient = useQueryClient();
   const { isAdmin } = useAuth();
   const [search, setSearch] = useState("");
-  const [cityFilter, setCityFilter] = useState("");
+  const [countryFilter, setCountryFilter] = useState<string>("");
+  const [cityFilter, setCityFilter] = useState<string>("");
   const [dateFilter, setDateFilter] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
