@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { AFRICAN_COUNTRIES, getCitiesForCountry } from "@/lib/locations";
+import { CitySearch } from "@/components/CitySearch";
+import { Badge } from "@/components/ui/badge";
 
 // Grouped category structure
 const categoryGroups = [
