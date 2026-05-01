@@ -95,14 +95,12 @@ const Index = () => {
         event.title.toLowerCase().includes(search.toLowerCase()) ||
         event.location.toLowerCase().includes(search.toLowerCase()) ||
         (event.description && event.description.toLowerCase().includes(search.toLowerCase()));
-      const matchesCity =
-        !cityFilter ||
-        (event.city && event.city.toLowerCase().includes(cityFilter.toLowerCase())) ||
-        (event.country && event.country.toLowerCase().includes(cityFilter.toLowerCase()));
+      const matchesCountry = !countryFilter || event.country === countryFilter;
+      const matchesCity = !cityFilter || event.city === cityFilter;
       const matchesDate = !dateFilter || event.date === dateFilter;
-      return matchesCategory && matchesSearch && matchesCity && matchesDate;
+      return matchesCategory && matchesSearch && matchesCountry && matchesCity && matchesDate;
     });
-  }, [events, search, cityFilter, dateFilter, activeCategory]);
+  }, [events, search, countryFilter, cityFilter, dateFilter, activeCategory]);
 
   const createMutation = useMutation({
     mutationFn: async (event: EventFormData) => {
@@ -134,7 +132,10 @@ const Index = () => {
   };
 
   const handleHeroSearch = (location: string, category: string) => {
-    if (location) setCityFilter(location);
+    if (location) {
+      setCountryFilter(location);
+      setCityFilter("");
+    }
     if (category) setActiveCategory(category);
     document.getElementById("events-section")?.scrollIntoView({ behavior: "smooth" });
   };
