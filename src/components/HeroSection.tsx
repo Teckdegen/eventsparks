@@ -1,9 +1,9 @@
 import { Search, MapPin } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import heroImage from "@/assets/hero-event.jpg";
 import { CreateEventDialog, type EventFormData } from "./CreateEventDialog";
+import { AFRICAN_COUNTRIES } from "@/lib/locations";
 
 const heroCategories = ["Blockchain", "Tech", "AI", "Hackathon", "Meetup", "Workshop", "Webinar", "Bootcamp"];
 
