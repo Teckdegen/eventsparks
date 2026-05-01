@@ -108,7 +108,7 @@ const Index = () => {
       const { error } = await supabase.from("events").insert({
         title: event.title,
         date: event.date,
-        time: event.time,
+        time: event.time || "09:00",
         location: event.location,
         description: event.description || null,
         category: event.category,

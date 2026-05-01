@@ -16,11 +16,11 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
-    if (user) navigate("/");
-  }, [user, navigate]);
+    if (isAdmin) navigate("/");
+  }, [isAdmin, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

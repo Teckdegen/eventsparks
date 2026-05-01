@@ -31,6 +31,7 @@ const categoryGroups = [
 export interface EventFormData {
   title: string;
   date: string;
+  time: string;
   location: string;
   description: string;
   category: string;
@@ -65,7 +66,7 @@ export const CreateEventDialog = ({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const emptyForm: EventFormData = { title: "", date: "", location: "", description: "", category: "", image: "", country: "", city: "", registration_link: "" };
+  const emptyForm: EventFormData = { title: "", date: "", time: "09:00", location: "", description: "", category: "", image: "", country: "", city: "", registration_link: "" };
   const [form, setForm] = useState<EventFormData>(editEvent || emptyForm);
 
   const [lastEditId, setLastEditId] = useState<string | undefined>();
