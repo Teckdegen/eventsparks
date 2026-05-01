@@ -16,7 +16,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
+import { AFRICAN_COUNTRIES, getCitiesForCountry } from "@/lib/locations";
 
 // Grouped category structure
 const categoryGroups = [
