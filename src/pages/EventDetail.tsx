@@ -104,9 +104,12 @@ const EventDetail = () => {
       </nav>
 
       <div className="max-w-4xl mx-auto px-4 py-8 md:px-8">
-        <div className="aspect-video rounded-2xl overflow-hidden bg-muted mb-8">
+        <div className="relative aspect-[21/9] rounded-2xl overflow-hidden bg-gradient-to-br from-secondary to-muted mb-8 ring-1 ring-border/50">
           {event.image ? (
-            <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
+            <>
+              <img src={event.image} alt={event.title} className="absolute inset-0 w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
+            </>
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
               <Calendar className="w-20 h-20 text-primary/30" />
