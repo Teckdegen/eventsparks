@@ -171,14 +171,43 @@ const Index = () => {
               className="pl-9 rounded-full"
             />
           </div>
-          <div className="relative w-full sm:w-52">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="City or country..."
-              value={cityFilter}
-              onChange={(e) => setCityFilter(e.target.value)}
-              className="pl-9 rounded-full"
-            />
+          <div className="relative w-full sm:w-44">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
+            <Select
+              value={countryFilter || "__all"}
+              onValueChange={(val) => {
+                const next = val === "__all" ? "" : val;
+                setCountryFilter(next);
+                setCityFilter("");
+              }}
+            >
+              <SelectTrigger className="pl-9 rounded-full">
+                <SelectValue placeholder="Country" />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                <SelectItem value="__all">All countries</SelectItem>
+                {AFRICAN_COUNTRIES.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-full sm:w-40">
+            <Select
+              value={cityFilter || "__all"}
+              onValueChange={(val) => setCityFilter(val === "__all" ? "" : val)}
+              disabled={!countryFilter}
+            >
+              <SelectTrigger className="rounded-full">
+                <SelectValue placeholder={countryFilter ? "City" : "Pick country"} />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                <SelectItem value="__all">All cities</SelectItem>
+                {getCitiesForCountry(countryFilter).map((city) => (
+                  <SelectItem key={city} value={city}>{city}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="relative w-full sm:w-44">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
