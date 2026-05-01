@@ -316,6 +316,7 @@ const Admin = () => {
                       id: event.id,
                       title: event.title,
                       date: event.date,
+                      time: event.time || "09:00",
                       location: event.location,
                       description: event.description || "",
                       category: event.category,
