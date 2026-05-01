@@ -43,9 +43,17 @@ export const EventCard = ({ event }: { event: EventData }) => {
   return (
     <Link to={`/event/${event.id}`}>
       <Card className="group overflow-hidden border-border/50 hover:shadow-xl transition-all duration-500 hover:-translate-y-1 cursor-pointer">
-        <div className="aspect-video overflow-hidden bg-muted">
+        <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-secondary to-muted">
           {event.image ? (
-            <img src={event.image} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <>
+              <img
+                src={event.image}
+                alt={event.title}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent pointer-events-none" />
+            </>
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
               <Calendar className="w-12 h-12 text-primary/40" />
