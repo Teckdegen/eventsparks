@@ -60,9 +60,9 @@ export const CitySearch = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[260px] p-0" align="start">
-        <Command>
-          <CommandInput placeholder="Type a city..." />
-          <CommandList>
+        <Command loop>
+          <CommandInput placeholder="Type a city..." autoFocus />
+          <CommandList className="max-h-72 overflow-y-auto">
             <CommandEmpty>No city found.</CommandEmpty>
             <CommandGroup>
               <CommandItem
@@ -78,7 +78,10 @@ export const CitySearch = ({
               {options.map(({ city, country: c }) => (
                 <CommandItem
                   key={`${c}-${city}`}
-                  value={`${city} ${c}`}
+                  // Include country in the searchable value so duplicate city
+                  // names (e.g. Tripoli) remain distinguishable for cmdk's filter
+                  // and for keyboard navigation.
+                  value={`${city}, ${c}`}
                   onSelect={() => {
                     onChange(city, c);
                     setOpen(false);
@@ -87,7 +90,7 @@ export const CitySearch = ({
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === city ? "opacity-100" : "opacity-0"
+                      value === city && (!country || country === c) ? "opacity-100" : "opacity-0"
                     )}
                   />
                   <span>{city}</span>

@@ -44,3 +44,20 @@ export const AFRICAN_COUNTRIES = Object.keys(AFRICAN_LOCATIONS).sort();
 
 export const getCitiesForCountry = (country: string): string[] =>
   AFRICAN_LOCATIONS[country] ?? [];
+
+// Returns all countries that contain a given city (handles duplicates like "Tripoli", "San Pedro" etc.)
+export const findCountriesForCity = (city: string): string[] => {
+  if (!city) return [];
+  const lower = city.toLowerCase();
+  return Object.entries(AFRICAN_LOCATIONS)
+    .filter(([, cities]) => cities.some((c) => c.toLowerCase() === lower))
+    .map(([country]) => country);
+};
+
+// Returns the best country match for a city, preferring an explicit hint
+export const findCountryForCity = (city: string, hint?: string): string | undefined => {
+  const matches = findCountriesForCity(city);
+  if (matches.length === 0) return undefined;
+  if (hint && matches.includes(hint)) return hint;
+  return matches[0];
+};

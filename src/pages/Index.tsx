@@ -1,16 +1,16 @@
-import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { HeroSection } from "@/components/HeroSection";
 import { EventCard } from "@/components/EventCard";
 import { CreateEventDialog, type EventFormData } from "@/components/CreateEventDialog";
-import { Search, MapPin, Calendar } from "lucide-react";
+import { Search, MapPin, Calendar, X } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SocialLinks } from "@/components/SocialLinks";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { SubscribePopup } from "@/components/SubscribePopup";
 import { AiChat } from "@/components/AiChat";
-import logo from "@/assets/eventsparks-logo.png";
+import logoMark from "@/assets/eventsparks-logo-mark.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
-import { AFRICAN_COUNTRIES, getCitiesForCountry } from "@/lib/locations";
+import { AFRICAN_COUNTRIES, getCitiesForCountry, findCountryForCity } from "@/lib/locations";
 import { CitySearch } from "@/components/CitySearch";
 import { Badge } from "@/components/ui/badge";
 
@@ -69,11 +69,23 @@ categoryGroups.forEach((g) => {
 const Index = () => {
   const queryClient = useQueryClient();
   const { isAdmin } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
-  const [countryFilter, setCountryFilter] = useState<string>("");
-  const [cityFilter, setCityFilter] = useState<string>("");
+  const [countryFilter, setCountryFilter] = useState<string>(searchParams.get("country") ?? "");
+  const [cityFilter, setCityFilter] = useState<string>(searchParams.get("city") ?? "");
   const [dateFilter, setDateFilter] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+
+  // Persist country & city filters to URL query string
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    if (countryFilter) params.set("country", countryFilter);
+    else params.delete("country");
+    if (cityFilter) params.set("city", cityFilter);
+    else params.delete("city");
+    setSearchParams(params, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countryFilter, cityFilter]);
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ["events"],
@@ -146,7 +158,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <nav className="flex items-center justify-between px-6 py-4 md:px-10">
-        <img src={logo} alt="EventSparks" className="h-10 md:h-12" />
+        <Link to="/" className="flex items-center gap-2">
+          <div className="bg-foreground rounded-lg p-1 dark:bg-background dark:border dark:border-border">
+            <img src={logoMark} alt="EventSparks logo" className="h-8 md:h-10 w-auto rounded" />
+          </div>
+          <span className="text-xl md:text-2xl font-display tracking-tight" style={{ fontFamily: "var(--font-display)" }}>EventSparks</span>
+        </Link>
         <div className="flex items-center gap-3">
           <ThemeToggle />
         </div>
@@ -173,37 +190,71 @@ const Index = () => {
               className="pl-9 rounded-full"
             />
           </div>
-          <div className="relative w-full sm:w-44">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
-            <Select
-              value={countryFilter || "__all"}
-              onValueChange={(val) => {
-                const next = val === "__all" ? "" : val;
-                setCountryFilter(next);
-                setCityFilter("");
-              }}
-            >
-              <SelectTrigger className="pl-9 rounded-full">
-                <SelectValue placeholder="Country" />
-              </SelectTrigger>
-              <SelectContent className="max-h-72">
-                <SelectItem value="__all">All countries</SelectItem>
-                {AFRICAN_COUNTRIES.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="relative w-full sm:w-44 flex gap-1">
+            <div className="relative flex-1">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
+              <Select
+                value={countryFilter || "__all"}
+                onValueChange={(val) => {
+                  const next = val === "__all" ? "" : val;
+                  setCountryFilter(next);
+                  setCityFilter("");
+                }}
+              >
+                <SelectTrigger className="pl-9 rounded-full">
+                  <SelectValue placeholder="Country" />
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  <SelectItem value="__all">All countries</SelectItem>
+                  {AFRICAN_COUNTRIES.map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {countryFilter && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="rounded-full shrink-0"
+                onClick={() => { setCountryFilter(""); setCityFilter(""); }}
+                aria-label="Clear country"
+                title="Clear country"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
           </div>
-          <div className="w-full sm:w-56">
-            <CitySearch
-              value={cityFilter}
-              country={countryFilter}
-              onChange={(city, c) => {
-                setCityFilter(city);
-                if (city && c && c !== countryFilter) setCountryFilter(c);
-              }}
-              placeholder="Search city..."
-            />
+          <div className="w-full sm:w-56 flex gap-1">
+            <div className="flex-1">
+              <CitySearch
+                value={cityFilter}
+                country={countryFilter}
+                onChange={(city, c) => {
+                  setCityFilter(city);
+                  // Resolve country: prefer the one passed by CitySearch, fall back to lookup
+                  const resolved = c ?? findCountryForCity(city, countryFilter);
+                  if (city && resolved && resolved !== countryFilter) {
+                    setCountryFilter(resolved);
+                  }
+                }}
+                placeholder="Search city..."
+              />
+            </div>
+            {cityFilter && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="rounded-full shrink-0"
+                onClick={() => setCityFilter("")}
+                aria-label="Clear city"
+                title="Clear city"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
           </div>
           <div className="relative w-full sm:w-44">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
