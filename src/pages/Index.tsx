@@ -190,26 +190,41 @@ const Index = () => {
               className="pl-9 rounded-full"
             />
           </div>
-          <div className="relative w-full sm:w-44">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
-            <Select
-              value={countryFilter || "__all"}
-              onValueChange={(val) => {
-                const next = val === "__all" ? "" : val;
-                setCountryFilter(next);
-                setCityFilter("");
-              }}
-            >
-              <SelectTrigger className="pl-9 rounded-full">
-                <SelectValue placeholder="Country" />
-              </SelectTrigger>
-              <SelectContent className="max-h-72">
-                <SelectItem value="__all">All countries</SelectItem>
-                {AFRICAN_COUNTRIES.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="relative w-full sm:w-44 flex gap-1">
+            <div className="relative flex-1">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
+              <Select
+                value={countryFilter || "__all"}
+                onValueChange={(val) => {
+                  const next = val === "__all" ? "" : val;
+                  setCountryFilter(next);
+                  setCityFilter("");
+                }}
+              >
+                <SelectTrigger className="pl-9 rounded-full">
+                  <SelectValue placeholder="Country" />
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  <SelectItem value="__all">All countries</SelectItem>
+                  {AFRICAN_COUNTRIES.map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {countryFilter && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="rounded-full shrink-0"
+                onClick={() => { setCountryFilter(""); setCityFilter(""); }}
+                aria-label="Clear country"
+                title="Clear country"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
           </div>
           <div className="w-full sm:w-56 flex gap-1">
             <div className="flex-1">
