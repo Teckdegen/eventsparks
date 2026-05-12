@@ -10,7 +10,7 @@ import { CategoryIcon } from "@/components/CategoryIcon";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { SubscribePopup } from "@/components/SubscribePopup";
 import { AiChat } from "@/components/AiChat";
-import logoMark from "@/assets/eventsparks-logo-mark.jpg";
+import logoMark from "@/assets/eventsparks-logo-mark.png";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -18,8 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
-import { AFRICAN_COUNTRIES, getCitiesForCountry, findCountryForCity } from "@/lib/locations";
-import { CitySearch } from "@/components/CitySearch";
+import { AFRICAN_COUNTRIES } from "@/lib/locations";
 import { Badge } from "@/components/ui/badge";
 
 // Grouped category structure
@@ -159,10 +158,8 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <nav className="flex items-center justify-between px-6 py-4 md:px-10">
         <Link to="/" className="flex items-center gap-2">
-          <div className="bg-foreground rounded-lg p-1 dark:bg-background dark:border dark:border-border">
-            <img src={logoMark} alt="EventSparks logo" className="h-8 md:h-10 w-auto rounded" />
-          </div>
-          <span className="text-xl md:text-2xl font-display tracking-tight" style={{ fontFamily: "var(--font-display)" }}>EventSparks</span>
+          <img src={logoMark} alt="EventSparks logo" className="h-12 md:h-14 w-auto" />
+          <span className="text-xl md:text-2xl font-display font-bold tracking-tight" style={{ fontFamily: "var(--font-display)" }}>EventSparks</span>
         </Link>
         <div className="flex items-center gap-3">
           <ThemeToggle />
@@ -221,36 +218,6 @@ const Index = () => {
                 onClick={() => { setCountryFilter(""); setCityFilter(""); }}
                 aria-label="Clear country"
                 title="Clear country"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            )}
-          </div>
-          <div className="w-full sm:w-56 flex gap-1">
-            <div className="flex-1">
-              <CitySearch
-                value={cityFilter}
-                country={countryFilter}
-                onChange={(city, c) => {
-                  setCityFilter(city);
-                  // Resolve country: prefer the one passed by CitySearch, fall back to lookup
-                  const resolved = c ?? findCountryForCity(city, countryFilter);
-                  if (city && resolved && resolved !== countryFilter) {
-                    setCountryFilter(resolved);
-                  }
-                }}
-                placeholder="Search city..."
-              />
-            </div>
-            {cityFilter && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="rounded-full shrink-0"
-                onClick={() => setCityFilter("")}
-                aria-label="Clear city"
-                title="Clear city"
               >
                 <X className="w-4 h-4" />
               </Button>
