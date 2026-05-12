@@ -158,7 +158,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <nav className="flex items-center justify-between px-6 py-4 md:px-10">
-        <img src={logo} alt="EventSparks" className="h-10 md:h-12" />
+        <Link to="/" className="flex items-center gap-2">
+          <div className="bg-foreground rounded-lg p-1 dark:bg-background dark:border dark:border-border">
+            <img src={logoMark} alt="EventSparks logo" className="h-8 md:h-10 w-auto rounded" />
+          </div>
+          <span className="text-xl md:text-2xl font-display tracking-tight" style={{ fontFamily: "var(--font-display)" }}>EventSparks</span>
+        </Link>
         <div className="flex items-center gap-3">
           <ThemeToggle />
         </div>
