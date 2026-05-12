@@ -94,9 +94,14 @@ export const AiChat = () => {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center"
+        aria-label="Chat with EventSparks AI"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 group flex items-center gap-2 pl-4 pr-5 py-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
       >
-        <MessageCircle className="w-6 h-6" />
+        <span className="relative flex">
+          <span className="absolute inline-flex h-full w-full rounded-full bg-primary-foreground/40 opacity-75 animate-ping" />
+          <MessageCircle className="w-5 h-5 relative" />
+        </span>
+        <span className="text-sm font-medium hidden sm:inline">Ask AI</span>
       </button>
     );
   }
