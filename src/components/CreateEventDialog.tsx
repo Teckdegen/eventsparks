@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, X, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AFRICAN_COUNTRIES, getCitiesForCountry } from "@/lib/locations";
+import { CitySearch } from "@/components/CitySearch";
 
 const categoryGroups = [
   {
