@@ -211,16 +211,35 @@ const Index = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="w-full sm:w-56">
-            <CitySearch
-              value={cityFilter}
-              country={countryFilter}
-              onChange={(city, c) => {
-                setCityFilter(city);
-                if (city && c && c !== countryFilter) setCountryFilter(c);
-              }}
-              placeholder="Search city..."
-            />
+          <div className="w-full sm:w-56 flex gap-1">
+            <div className="flex-1">
+              <CitySearch
+                value={cityFilter}
+                country={countryFilter}
+                onChange={(city, c) => {
+                  setCityFilter(city);
+                  // Resolve country: prefer the one passed by CitySearch, fall back to lookup
+                  const resolved = c ?? findCountryForCity(city, countryFilter);
+                  if (city && resolved && resolved !== countryFilter) {
+                    setCountryFilter(resolved);
+                  }
+                }}
+                placeholder="Search city..."
+              />
+            </div>
+            {cityFilter && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="rounded-full shrink-0"
+                onClick={() => setCityFilter("")}
+                aria-label="Clear city"
+                title="Clear city"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
           </div>
           <div className="relative w-full sm:w-44">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
