@@ -165,20 +165,18 @@ export const CreateEventDialog = ({
             </div>
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>
-              <Select
+              <CitySearch
                 value={form.city}
-                onValueChange={(val) => setForm({ ...form, city: val })}
-                disabled={!form.country}
-              >
-                <SelectTrigger id="city">
-                  <SelectValue placeholder={form.country ? "Select city" : "Pick country first"} />
-                </SelectTrigger>
-                <SelectContent className="max-h-72">
-                  {getCitiesForCountry(form.country).map((city) => (
-                    <SelectItem key={city} value={city}>{city}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                country={form.country}
+                onChange={(city, c) => {
+                  setForm((prev) => ({
+                    ...prev,
+                    city,
+                    country: c ?? prev.country,
+                  }));
+                }}
+                placeholder={form.country ? "Search city..." : "Search any city..."}
+              />
             </div>
           </div>
           <div className="space-y-2">
