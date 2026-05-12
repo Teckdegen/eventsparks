@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, X, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { AFRICAN_COUNTRIES, getCitiesForCountry } from "@/lib/locations";
+import { AFRICAN_COUNTRIES } from "@/lib/locations";
 import { CitySearch } from "@/components/CitySearch";
 
 const categoryGroups = [
