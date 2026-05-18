@@ -226,6 +226,25 @@ const Index = () => {
               </Button>
             )}
           </div>
+          <div className="relative w-full sm:w-52">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search city..."
+              value={cityFilter}
+              onChange={(e) => setCityFilter(e.target.value)}
+              className="pl-9 pr-9 rounded-full"
+            />
+            {cityFilter && (
+              <button
+                type="button"
+                onClick={() => setCityFilter("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear city"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <div className="relative w-full sm:w-44">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
@@ -238,9 +257,37 @@ const Index = () => {
         </div>
 
         {/* Active location filter chips */}
-        {countryFilter && (
+        {(countryFilter || cityFilter) && (
           <div className="flex flex-wrap items-center gap-2 mb-6 text-sm">
             <span className="text-muted-foreground">Filtering by:</span>
+            {countryFilter && (
+            <Badge variant="secondary" className="gap-1.5 pr-1.5">
+              <MapPin className="w-3 h-3" />
+              {countryFilter}
+              <button
+                onClick={() => setCountryFilter("")}
+                className="ml-1 rounded-full hover:bg-background/60 px-1"
+                aria-label="Clear country"
+              >
+                ×
+              </button>
+            </Badge>
+            )}
+            {cityFilter && (
+              <Badge variant="secondary" className="gap-1.5 pr-1.5">
+                <MapPin className="w-3 h-3" />
+                {cityFilter}
+                <button
+                  onClick={() => setCityFilter("")}
+                  className="ml-1 rounded-full hover:bg-background/60 px-1"
+                  aria-label="Clear city"
+                >
+                  ×
+                </button>
+              </Badge>
+            )}
+          </div>
+        )}
             <Badge variant="secondary" className="gap-1.5 pr-1.5">
               <MapPin className="w-3 h-3" />
               {countryFilter}
