@@ -71,18 +71,20 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [countryFilter, setCountryFilter] = useState<string>(searchParams.get("country") ?? "");
+  const [cityFilter, setCityFilter] = useState<string>(searchParams.get("city") ?? "");
   const [dateFilter, setDateFilter] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
-  // Persist country filter to URL query string
+  // Persist country and city filters to URL query string
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
     if (countryFilter) params.set("country", countryFilter);
     else params.delete("country");
-    params.delete("city");
+    if (cityFilter) params.set("city", cityFilter);
+    else params.delete("city");
     setSearchParams(params, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countryFilter]);
+  }, [countryFilter, cityFilter]);
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ["events"],
