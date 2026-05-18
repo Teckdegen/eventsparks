@@ -288,19 +288,6 @@ const Index = () => {
             )}
           </div>
         )}
-            <Badge variant="secondary" className="gap-1.5 pr-1.5">
-              <MapPin className="w-3 h-3" />
-              {countryFilter}
-              <button
-                onClick={() => setCountryFilter("")}
-                className="ml-1 rounded-full hover:bg-background/60 px-1"
-                aria-label="Clear country"
-              >
-                ×
-              </button>
-            </Badge>
-          </div>
-        )}
 
         {/* Category filter tabs */}
         <div className="flex flex-wrap gap-2 mb-8">
