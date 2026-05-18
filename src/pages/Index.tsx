@@ -110,10 +110,14 @@ const Index = () => {
         event.location.toLowerCase().includes(search.toLowerCase()) ||
         (event.description && event.description.toLowerCase().includes(search.toLowerCase()));
       const matchesCountry = !countryFilter || event.country === countryFilter;
+      const matchesCity =
+        !cityFilter ||
+        (event.city && event.city.toLowerCase().includes(cityFilter.toLowerCase())) ||
+        (event.location && event.location.toLowerCase().includes(cityFilter.toLowerCase()));
       const matchesDate = !dateFilter || event.date === dateFilter;
-      return matchesCategory && matchesSearch && matchesCountry && matchesDate;
+      return matchesCategory && matchesSearch && matchesCountry && matchesCity && matchesDate;
     });
-  }, [events, search, countryFilter, dateFilter, activeCategory]);
+  }, [events, search, countryFilter, cityFilter, dateFilter, activeCategory]);
 
   const createMutation = useMutation({
     mutationFn: async (event: EventFormData) => {
