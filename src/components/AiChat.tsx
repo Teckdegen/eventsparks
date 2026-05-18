@@ -163,22 +163,22 @@ export const AiChat = () => {
       </div>
 
       {/* Input */}
-      <div className="border-t border-border px-3 py-2">
+      <div className="border-t border-border px-2 py-2 sm:px-3">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             send();
           }}
-          className="flex gap-2"
+          className="flex items-center gap-2 min-w-0"
         >
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about events..."
-            className="rounded-full text-sm h-9"
+            className="rounded-full text-sm h-9 flex-1 min-w-0"
             disabled={isLoading}
           />
-          <Button type="submit" size="sm" className="rounded-full shrink-0 h-9 w-9 p-0" disabled={isLoading || !input.trim()}>
+          <Button type="submit" size="sm" className="rounded-full shrink-0 h-9 w-9 p-0" disabled={isLoading || !input.trim()} aria-label="Send">
             <Send className="w-4 h-4" />
           </Button>
         </form>
