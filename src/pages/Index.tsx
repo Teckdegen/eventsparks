@@ -71,20 +71,18 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [countryFilter, setCountryFilter] = useState<string>(searchParams.get("country") ?? "");
-  const [cityFilter, setCityFilter] = useState<string>(searchParams.get("city") ?? "");
   const [dateFilter, setDateFilter] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
-  // Persist country & city filters to URL query string
+  // Persist country filter to URL query string
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
     if (countryFilter) params.set("country", countryFilter);
     else params.delete("country");
-    if (cityFilter) params.set("city", cityFilter);
-    else params.delete("city");
+    params.delete("city");
     setSearchParams(params, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countryFilter, cityFilter]);
+  }, [countryFilter]);
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ["events"],
@@ -110,11 +108,10 @@ const Index = () => {
         event.location.toLowerCase().includes(search.toLowerCase()) ||
         (event.description && event.description.toLowerCase().includes(search.toLowerCase()));
       const matchesCountry = !countryFilter || event.country === countryFilter;
-      const matchesCity = !cityFilter || event.city === cityFilter;
       const matchesDate = !dateFilter || event.date === dateFilter;
-      return matchesCategory && matchesSearch && matchesCountry && matchesCity && matchesDate;
+      return matchesCategory && matchesSearch && matchesCountry && matchesDate;
     });
-  }, [events, search, countryFilter, cityFilter, dateFilter, activeCategory]);
+  }, [events, search, countryFilter, dateFilter, activeCategory]);
 
   const createMutation = useMutation({
     mutationFn: async (event: EventFormData) => {
@@ -148,7 +145,6 @@ const Index = () => {
   const handleHeroSearch = (location: string, category: string) => {
     if (location) {
       setCountryFilter(location);
-      setCityFilter("");
     }
     if (category) setActiveCategory(category);
     document.getElementById("events-section")?.scrollIntoView({ behavior: "smooth" });
@@ -157,9 +153,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <nav className="flex items-center justify-between px-6 py-4 md:px-10">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logoMark} alt="EventSparks logo" className="h-12 md:h-14 w-auto" />
-          <span className="text-xl md:text-2xl font-display font-bold tracking-tight" style={{ fontFamily: "var(--font-display)" }}>EventSparks</span>
+        <Link to="/" className="flex items-center gap-2 group">
+          <span className="inline-flex items-center justify-center h-12 w-12 md:h-14 md:w-14 rounded-xl bg-white ring-1 ring-border shadow-sm overflow-hidden">
+            <img src={logoMark} alt="EventSparks logo" className="h-10 md:h-12 w-auto object-contain" />
+          </span>
+          <span className="text-xl md:text-2xl font-display font-extrabold tracking-tight" style={{ fontFamily: "var(--font-display)" }}>EventSparks</span>
         </Link>
         <div className="flex items-center gap-3">
           <ThemeToggle />
@@ -195,7 +193,6 @@ const Index = () => {
                 onValueChange={(val) => {
                   const next = val === "__all" ? "" : val;
                   setCountryFilter(next);
-                  setCityFilter("");
                 }}
               >
                 <SelectTrigger className="pl-9 rounded-full">
@@ -215,7 +212,7 @@ const Index = () => {
                 variant="ghost"
                 size="icon"
                 className="rounded-full shrink-0"
-                onClick={() => { setCountryFilter(""); setCityFilter(""); }}
+                onClick={() => setCountryFilter("")}
                 aria-label="Clear country"
                 title="Clear country"
               >
@@ -235,40 +232,20 @@ const Index = () => {
         </div>
 
         {/* Active location filter chips */}
-        {(countryFilter || cityFilter) && (
+        {countryFilter && (
           <div className="flex flex-wrap items-center gap-2 mb-6 text-sm">
             <span className="text-muted-foreground">Filtering by:</span>
-            {countryFilter && (
-              <Badge variant="secondary" className="gap-1.5 pr-1.5">
-                <MapPin className="w-3 h-3" />
-                {countryFilter}
-                <button
-                  onClick={() => { setCountryFilter(""); setCityFilter(""); }}
-                  className="ml-1 rounded-full hover:bg-background/60 px-1"
-                  aria-label="Clear country"
-                >
-                  ×
-                </button>
-              </Badge>
-            )}
-            {cityFilter && (
-              <Badge variant="secondary" className="gap-1.5 pr-1.5">
-                {cityFilter}
-                <button
-                  onClick={() => setCityFilter("")}
-                  className="ml-1 rounded-full hover:bg-background/60 px-1"
-                  aria-label="Clear city"
-                >
-                  ×
-                </button>
-              </Badge>
-            )}
-            <button
-              onClick={() => { setCountryFilter(""); setCityFilter(""); }}
-              className="text-xs text-primary hover:underline ml-1"
-            >
-              Clear all
-            </button>
+            <Badge variant="secondary" className="gap-1.5 pr-1.5">
+              <MapPin className="w-3 h-3" />
+              {countryFilter}
+              <button
+                onClick={() => setCountryFilter("")}
+                className="ml-1 rounded-full hover:bg-background/60 px-1"
+                aria-label="Clear country"
+              >
+                ×
+              </button>
+            </Badge>
           </div>
         )}
 
