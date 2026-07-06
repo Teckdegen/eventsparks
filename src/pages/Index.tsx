@@ -160,9 +160,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <nav className="flex items-center justify-between px-6 py-4 md:px-10">
         <Link to="/" className="flex items-center gap-2 group">
-          <span className="inline-flex items-center justify-center h-12 w-12 md:h-14 md:w-14 rounded-xl bg-white ring-1 ring-border shadow-sm overflow-hidden">
-            <img src={logoMark} alt="EventSparks logo" className="h-10 md:h-12 w-auto object-contain" />
-          </span>
+          <img src={logoMark} alt="EventSparks logo" className="h-12 md:h-14 w-auto object-contain" />
           <span className="text-xl md:text-2xl font-display font-extrabold tracking-tight" style={{ fontFamily: "var(--font-display)" }}>EventSparks</span>
         </Link>
         <div className="flex items-center gap-3">
