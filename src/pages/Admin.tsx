@@ -90,17 +90,22 @@ const Admin = () => {
 
   const createMutation = useMutation({
     mutationFn: async (event: EventFormData) => {
-      const { error } = await supabase.from("events").insert({
-        title: event.title,
-        date: event.date,
-        time: event.time || "09:00",
-        location: event.location,
-        description: event.description || null,
-        category: event.category,
-        image: event.image || null,
-        country: event.country || null,
-        city: event.city || null,
-        registration_link: event.registration_link || null,
+      const { error } = await supabase.functions.invoke("admin-events", {
+        body: {
+          action: "create",
+          event: {
+            title: event.title,
+            date: event.date,
+            time: event.time || "09:00",
+            location: event.location,
+            description: event.description || null,
+            category: event.category,
+            image: event.image || null,
+            country: event.country || null,
+            city: event.city || null,
+            registration_link: event.registration_link || null,
+          },
+        },
       });
       if (error) throw error;
     },
@@ -113,20 +118,23 @@ const Admin = () => {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, ...event }: EventFormData & { id: string }) => {
-      const { error } = await supabase
-        .from("events")
-        .update({
-          title: event.title,
-          date: event.date,
-          location: event.location,
-          description: event.description || null,
-          category: event.category,
-          image: event.image || null,
-          country: event.country || null,
-          city: event.city || null,
-          registration_link: event.registration_link || null,
-        })
-        .eq("id", id);
+      const { error } = await supabase.functions.invoke("admin-events", {
+        body: {
+          action: "update",
+          id,
+          event: {
+            title: event.title,
+            date: event.date,
+            location: event.location,
+            description: event.description || null,
+            category: event.category,
+            image: event.image || null,
+            country: event.country || null,
+            city: event.city || null,
+            registration_link: event.registration_link || null,
+          },
+        },
+      });
       if (error) throw error;
     },
     onSuccess: () => {
@@ -140,7 +148,9 @@ const Admin = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("events").delete().eq("id", id);
+      const { error } = await supabase.functions.invoke("admin-events", {
+        body: { action: "delete", id },
+      });
       if (error) throw error;
     },
     onSuccess: () => {
